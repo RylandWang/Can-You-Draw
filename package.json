@@ -1,0 +1,27 @@
+{
+  "name": "Can-You-Draw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "angular": "^1.7.8",
+    "express": "^4.17.1",
+    "ngx-socket-io": "^3.0.1",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RylandWang/Can-You-Draw.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RylandWang/Can-You-Draw/issues"
+  },
+  "homepage": "https://github.com/RylandWang/Can-You-Draw#readme"
+}
