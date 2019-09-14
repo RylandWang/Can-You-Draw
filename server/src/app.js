@@ -3,17 +3,25 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 const documents = {};
+var players = []
+var playerId = 0
 drawings = []
 const PORT = 4444;
 
-/** Event listener */
+/** Socket Event listener */
 io.on('connection', socket => {
     let previousId;
-    const safeJoin = currentId => {
+
+    const joinRoom = currentId => {
         socket.leave(previousId);
         socket.join(currentId, () => console.log(`Socket ${socket.id} joined room ${currentId}`));
         previousId = currentId;
     }
+
+    const leaveRoom = currentId => {
+        socket.leave(currentId)
+    }
+
 
     socket.on('getDoc', docId => {
         safeJoin(docId);
@@ -41,10 +49,36 @@ io.on('connection', socket => {
         io.emit('newMsg', message)
     })
 
+    socket.on('startGame', ()=> {
+        io.emit("gameStarted", true)
+    })
+
     socket.on('submitDrawing', generatedString => {
         drawings.push(generatedString)
         console.log(drawings)
         io.emit('drawings', drawings)
+    });
+
+    socket.on('playerJoin', newPlayer => {
+        players.push(newPlayer)
+        io.emit('players', players)
+    
+        playerId += 1
+        io.emit('playerId', playerId)
+        console.log("player joined")
+        console.log(players)
+        
+        console.log(playerId)
+
+    });
+
+    
+
+    socket.on('playerLeave', player => {
+        players = players.filter(x=>x.id != player.id)
+        io.emit('players', players)
+        console.log("player left", playerId)
+        console.log(players)
     });
 
     io.emit('documents', Object.keys(documents));
