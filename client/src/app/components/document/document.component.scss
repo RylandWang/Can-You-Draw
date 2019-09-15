@@ -10,3 +10,20 @@ textarea {
     border: none;
     padding: 20px 0px 20px 15px;
 }
+
+#canvas {
+    height: 900px;
+}
+
+.container{
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+}
+.left{
+    width: 200px;
+}
+.right{
+    margin-top: 1em;
+    right: 1;
+}
