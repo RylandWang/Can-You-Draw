@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { SocketService } from 'src/app/services/socket.service';
 import { Player } from 'src/app/models/player';
 import { Observable } from 'rxjs';
-import { async } from 'q';
 
 @Component({
   selector: 'app-pre-game',
@@ -11,26 +10,25 @@ import { async } from 'q';
 })
 export class PreGameComponent implements OnInit {
   player: Player
-  players: Player[]
+  players: Observable<Player[]>
   gameStarted: Observable<boolean>;
   playerId: string = ""
 
-  constructor(private socketService: SocketService) { }
+  constructor(private readonly socketService: SocketService) { }
 
   ngOnInit() {
-    this.setUp()
-
-  }
-
-  async setUp() {
+    this.socketService.players.subscribe(x=>console.log(x))
+    this.players = this.socketService.players
+    this.gameStarted = this.socketService.gameStarted
     this.playerId = this.socketService.generatePlayerId()
 
-      this.player = {
-        id: this.playerId,
-        name: "default",
-        drawing: "",
-        score: 0,
-      }
+    this.player = {
+      id: this.playerId,
+      name: "default",
+      drawing: "",
+      score: 0,
+      waiting: true
+    }
 
     this.gameStarted = this.socketService.gameStarted;
     this.socketService.playerJoin(this.player)
@@ -43,10 +41,6 @@ export class PreGameComponent implements OnInit {
   @HostListener('window:unload', ['$event'])
   unloadHandler(event) {
     this.socketService.playerLeave(this.player)
-  }
-
-  getKeys(map) {
-    return Array.from(map.keys());
   }
 
 }
