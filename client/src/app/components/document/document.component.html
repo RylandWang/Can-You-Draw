@@ -7,28 +7,33 @@
         [shouldDownloadDrawing]="true" (onBatchUpdate)="sendBatchUpdates($event)" (onSave)="submitDrawing()">
     </canvas-whiteboard>
 </div>
-<div *ngFor="let output of drawings| async"><img [src]="output" alt="Red dot" /></div>
+<!-- <div *ngFor="let output of drawings| async"><img [src]="output" alt="Red dot" /></div> -->
 
 <div *ngIf="drawingComplete">
-    <p>Done! Waiting for other players... {{timeLeft}} seconds....</p>
+    <p>Done! Waiting for other players... {{timeLeft}}s....</p>
     <h2>Your drawing for: </h2>
         <img [src]="generatedString" alt="Red dot" />
 </div>
 
 <div class="container">
 
-    <div class="left">
+    <div class="left" class="playersHeading">
         <h2>Players</h2>
-        <ul>
-            <li *ngFor="let player of players | async">
-                <p>{{player.id}}</p>
-            </li>
-        </ul>
+
     </div>
 
     <div class="right" *ngIf="!drawingComplete">
         <p>Please draw: </p>
-        <p>You have {{timeLeft}} seconds....</p>
+        <p>You have {{timeLeft}}s....</p>
     </div>
 
+</div>
+<div *ngFor="let player of players | async">
+        <div class="container">
+        <p class="left">{{player.id}}</p>
+        <div class="right" *ngIf="player.waiting">
+            <img src="../../../assets/pencil.png" style="width:34px;height:25px;" alt="drawing..." />
+        </div>
+        <p class="right" *ngIf="!player.waiting">Done!</p>
+    </div>
 </div>

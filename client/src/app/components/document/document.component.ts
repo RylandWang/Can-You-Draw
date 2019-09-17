@@ -3,7 +3,6 @@ import { SocketService } from 'src/app/services/socket.service';
 import { Subscription, Observable } from 'rxjs';
 import { CanvasWhiteboardComponent, CanvasWhiteboardUpdate, CanvasWhiteboardService } from 'ng2-canvas-whiteboard';
 import { Player } from 'src/app/models/player';
-import { Time } from '@angular/common';
 
 @Component({
   selector: 'app-document',
@@ -32,17 +31,25 @@ export class DocumentComponent implements OnInit {
 
   ngOnInit() {
     this.startTimer()
-    // set canvas height to be 0.8*window.height
-    document.getElementById("canvas").style.height = (window.innerHeight * 0.8).toString() + "px";
+  
+    this.setUp()
     this.socketService.playerLeave(this.player)
     this.socketService.playerJoin(this.player)
+  }
+
+  async setUp() {
+  
+
+    // set canvas height to be 0.8*window.height
+    document.getElementById("canvas").style.height = (window.innerHeight * 0.8).toString() + "px";
+    console.log("ok")
 
     this.drawings = this.socketService.drawings;
-
 
   }
 
   sendBatchUpdates(updates: CanvasWhiteboardUpdate[]) {
+
     console.log("batch update")
     this.generatedString = this.canvasWhiteboard.generateCanvasDataUrl("image/jpeg", 0.3);
 
@@ -53,6 +60,10 @@ export class DocumentComponent implements OnInit {
   submitDrawing() {
     this.socketService.submitDrawing(this.generatedString)
     this.drawingComplete = true
+    this.player.waiting = false
+
+    this.socketService.playerLeave(this.player)
+    this.socketService.playerJoin(this.player)
   }
 
 

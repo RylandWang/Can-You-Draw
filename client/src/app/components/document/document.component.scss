@@ -12,18 +12,22 @@ textarea {
 }
 
 #canvas {
-    height: 900px;
+    height: 28rem
 }
 
 .container{
     display: flex;
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
 }
 .left{
-    width: 200px;
+    width: 8em;
 }
 .right{
     margin-top: 1em;
-    right: 1;
+}
+
+.playersHeading{
+    margin-top: 2em;
+    margin-right: 3em;
 }
