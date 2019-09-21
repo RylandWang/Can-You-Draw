@@ -3,4 +3,5 @@ export class Player {
     name: string;
     drawing: string; //base64 string rep of drawing
     score: number;
+    waiting: boolean;
 }

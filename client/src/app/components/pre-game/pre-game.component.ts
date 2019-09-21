@@ -41,6 +41,9 @@ export class PreGameComponent implements OnInit {
   @HostListener('window:unload', ['$event'])
   unloadHandler(event) {
     this.socketService.playerLeave(this.player)
+    if (this.player.waiting){
+      this.socketService.updateNumPlayersDrawing(-1)
+    }
   }
 
 }

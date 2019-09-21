@@ -1,3 +1,5 @@
+<div *ngIf="!(timeLeft<1 || (numPlayersDrawing|async)<1)">
+
 <div id="canvas" *ngIf="!drawingComplete">
     <canvas-whiteboard #canvasWhiteboard [drawButtonClass]="'drawButtonClass'" [drawButtonText]="'Draw'"
         [clearButtonClass]="'clearButtonClass'" [clearButtonText]="'Clear'" [undoButtonText]="'Undo'"
@@ -9,7 +11,7 @@
 </div>
 <!-- <div *ngFor="let output of drawings| async"><img [src]="output" alt="Red dot" /></div> -->
 
-<div *ngIf="drawingComplete">
+<div *ngIf="!player.waiting">
     <p>Done! Waiting for other players... {{timeLeft}}s....</p>
     <h2>Your drawing for: </h2>
         <img [src]="generatedString" alt="Red dot" />
@@ -22,8 +24,8 @@
 
     </div>
 
-    <div class="right" *ngIf="!drawingComplete">
-        <p>Please draw: </p>
+    <div class="right" *ngIf="player.waiting">
+        <p>Draw: </p>
         <p>You have {{timeLeft}}s....</p>
     </div>
 
@@ -36,4 +38,9 @@
         </div>
         <p class="right" *ngIf="!player.waiting">Done!</p>
     </div>
+</div>
+</div>
+
+<div *ngIf="timeLeft<1 || (numPlayersDrawing|async)<1">
+    <app-guess></app-guess>
 </div>

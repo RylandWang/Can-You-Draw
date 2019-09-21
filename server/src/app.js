@@ -5,6 +5,7 @@ const io = require('socket.io')(http);
 const documents = {};
 var players = []
 var playerId = 0
+var numPlayersDrawing = 0
 drawings = []
 const PORT = 4444;
 
@@ -55,34 +56,56 @@ io.on('connection', socket => {
 
     socket.on('submitDrawing', generatedString => {
         drawings.push(generatedString)
-        console.log(drawings)
         io.emit('drawings', drawings)
     });
 
     socket.on('playerJoin', newPlayer => {
         players.push(newPlayer)
         io.emit('players', players)
-    
         playerId += 1
         io.emit('playerId', playerId)
+        numPlayersDrawing = players.length
+        io.emit('numPlayersDrawing', numPlayersDrawing)
+
         console.log("player joined")
-        console.log(players)
-        
-        console.log(playerId)
+        console.log(numPlayersDrawing)
 
     });
-
-    
 
     socket.on('playerLeave', player => {
         players = players.filter(x=>x.id != player.id)
         io.emit('players', players)
         console.log("player left", playerId)
         console.log(players)
+        console.log(numPlayersDrawing)
+
     });
 
-    io.emit('documents', Object.keys(documents));
+    socket.on("updatePlayer", player => {
+        for (var i in players) {
+            if (players[i].id == player.id) {
+               players[i] = player
+               break;
+            }
+        }
+        io.emit("players", players)
+    })
+    
+    socket.on('updateAllPlayers', () => {
+        io.emit('players', players)
+    })
 
+    socket.on('updateNumPlayersDrawing', increment =>{
+        if (increment == 0){
+            numPlayersDrawing = players.length
+        } 
+        else {
+            numPlayersDrawing += increment
+        }
+        io.emit("numPlayersDrawing", numPlayersDrawing)
+    })
+
+    io.emit('documents', Object.keys(documents));
     console.log(`Socket ${socket.id} has connected`);
 });
 
